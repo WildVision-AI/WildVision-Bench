@@ -39,3 +39,17 @@ Results will be saved in `data/release_bench_0617/model_judgements/judge_gpt-4o_
 python show_results.py --first-game-only --judge-name gpt-4o --baseline claude-3-sonnet-20240229 --bench-name release_bench_0617
 ```
 
+## Acknowledgment
+We thank LMSYS for their great work on https://chat.lmsys.org/. Our code base is adapted from https://github.com/lm-sys/arena-hard-auto.
+
+## Citation
+```
+@misc{lu2024wildvision,
+      title={WildVision: Evaluating Vision-Language Models in the Wild with Human Preferences}, 
+      author={Yujie Lu and Dongfu Jiang and Wenhu Chen and William Yang Wang and Yejin Choi and Bill Yuchen Lin},
+      year={2024},
+      eprint={2406.11069},
+      archivePrefix={arXiv},
+      primaryClass={id='cs.CV' full_name='Computer Vision and Pattern Recognition' is_active=True alt_name=None in_archive='cs' is_general=False description='Covers image processing, computer vision, pattern recognition, and scene understanding. Roughly includes material in ACM Subject Classes I.2.10, I.4, and I.5.'}
+}
+```
