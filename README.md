@@ -4,15 +4,23 @@
 
 As part of the wildvision arena environment, please install the following dependencies:
 ```bash
-conda create -n wvbench python==3.9
-pip install -e .[model_worker,vision_bench]
+conda create -n visionbench python==3.9
+pip install -e .
 ```
 
 ## WVBench Image-Instruct Pair
 You can get image-instruct pair of WVBench-500 to generate your model answers by loading bench data below:
 ```bash
-wildbench_data = load_dataset('WildVision/wildvision-arena-data', 'release_bench_0617', split='test500')
+wildbench_data = load_dataset('WildVision/wildvision-bench', split='test')
 ```
+
+## Generate model answers
+```bash
+CUDA_VISIBLE_DEVICES=0 python -m gen_answers --model_name "{model_name}" 
+# e.g., CUDA_VISIBLE_DEVICES=0 python -m gen_answers --model_name "liuhaotian/llava-v1.6-vicuna-7b"
+```
+
+see [`gen_answers.sh`](gen_answers.sh) for more examples.
 
 ## Get judgements
 First, go to [`config/judge_config.yaml`](config/judge_config.yaml) and add the models you want to evaluate in the `model_list` field. For example:
@@ -38,6 +46,9 @@ Results will be saved in `data/release_bench_0617/model_judgements/judge_gpt-4o_
 ```bash
 python show_results.py --first-game-only --judge-name gpt-4o --baseline claude-3-sonnet-20240229 --bench-name release_bench_0617
 ```
+
+## TODO
+- [ ] change the bench to the 0630 version (current 0617)
 
 ## Acknowledgment
 We thank LMSYS for their great work on https://chat.lmsys.org/. Our code base is adapted from https://github.com/lm-sys/arena-hard-auto.

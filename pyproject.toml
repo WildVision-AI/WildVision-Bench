@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "wildvision"
+name = "wvbench"
 version = "0.2.35"
-description = "An open platform for benchmarking Vision Language Models in the wild."
+description = "WildVision-Bench"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -13,14 +13,15 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
-    "aiohttp", "fastapi", "httpx", "markdown2[all]", "nh3", "numpy",
+    "aiohttp", "fastapi", "httpx", "markdown2[all]", "nh3", "numpy","matplotlib",
     "prompt_toolkit>=3.0.0", "pydantic<2,>=1", "requests", "rich>=10.0.0",
-    "shortuuid", "tiktoken", "uvicorn", "fire", "datasets", 
+    "shortuuid", "tiktoken", "uvicorn", "fire", "datasets", "tiktoken", "fire", "datasets", "reka-api", "prettytable", "plotly", "scikit-learn", "icecream",
+    "accelerate>=0.21", "peft", "sentencepiece", "torch", "torchvision", "einops", "transformers>=4.31.0", "protobuf", "psutil", 'openai', 'attrdict', 'timm', 'google-generativeai', 'anthropic',
+    "transformers_stream_generator", "imagehash",
+    "wildvision @ git+https://github.com/WildVision-AI/WildVision-Arena",
 ]
 
 [project.optional-dependencies]
-model_worker = ["accelerate>=0.21", "peft", "sentencepiece", "torch", "torchvision", "einops", "transformers>=4.31.0", "protobuf", "psutil", 'openai', 'attrdict', 'timm', 'google-generativeai', 'anthropic']
-vision_bench = ["tiktoken", "fire", "datasets", "reka-api", "prettytable", "plotly", "scikit-learn", "icecream"]
 
 [project.urls]
 "Homepage" = "https://huggingface.co/spaces/WildVision/vision-arena"

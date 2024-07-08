@@ -199,7 +199,7 @@ def main(
         futures = []
         for model in models:
             count = 0
-            for question in questions:
+            for idx, question in enumerate(questions):
                 question_id = question["question_id"]
 
                 kwargs = {}

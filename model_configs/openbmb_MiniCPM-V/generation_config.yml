@@ -1,0 +1,6 @@
+echo: false
+max_new_tokens: 4096
+stop: null
+stop_token_ids: null
+temperature: 0.0
+top_p: 1.0

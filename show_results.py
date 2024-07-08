@@ -357,7 +357,7 @@ def run_elo_simulation(model_answers, model_judgements, args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--bench-name", type=str, default="vision_bench")
+    parser.add_argument("--bench-name", type=str, default="vision_bench_0617")
     parser.add_argument("--judge-name", type=str, default="gpt-4o")
     parser.add_argument("--baseline", type=str, default="claude-3-sonnet-20240229")
     parser.add_argument("--load-battles", action="store_true")

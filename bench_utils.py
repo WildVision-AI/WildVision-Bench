@@ -124,6 +124,8 @@ def load_image_categoeis(bench_name:str) -> dict:
 
 def load_model_answers(answer_dir, category=None):
     model_answers = {}
+    if not os.path.exists(answer_dir):
+        return model_answers
     for file in os.listdir(answer_dir):
         if file.endswith(".jsonl"):
             model = file.replace(".jsonl", "")
