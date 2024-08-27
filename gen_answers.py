@@ -159,6 +159,7 @@ def call_local_worker(text, image, worker_addr, model_name, **generate_kwargs) -
         print("Error in worker response: ", e)
         raise e
         return ""
+    
 def launch_lcoal_worker(
     model_name: str,
 ) -> str:
@@ -196,9 +197,6 @@ def cleanup_process(proc):
 def main(
     dataset_path: str="WildVision/wildvision-bench",
     dataset_name: str="default",
-    # dataset_path: str="WildVision/wildvision-internal-data",
-    # dataset_name: str="taxonmy",
-    # dataset_split: str="test_with_taxnomy",
     dataset_split: str="test",
     worker_addr: str=None,
     model_name: str=None,

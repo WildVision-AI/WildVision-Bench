@@ -337,6 +337,11 @@ def run_elo_simulation(model_answers, model_judgements, args):
         pt_table.add_row([row['model'], row['score'], interval, f"{round(row['win_rate'] * 100, 2)}%", row['reward'], row['much_better'], row['better'], row['tie'], row['worse'], row['much_worse'], int(row['avg_tokens'])])
     print(pt_table)
     
+    pt_table.set_style(pt.MARKDOWN)
+    md_table = pt_table.get_string()
+    with open("./elo_leaderboard.md", "w") as f:
+        f.write(md_table)
+    
     # for _, row in stats.iterrows():
     #     interval = str((round(row['lower'] - row['score'], decimal), round(row['upper'] - row['score'], decimal)))
     #     to_print_line = f"{row['model'] : <30} | score: {round(row['score'], decimal) : ^5} | 95% CI: {interval : ^12}"
