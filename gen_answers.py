@@ -11,7 +11,6 @@ import tiktoken
 from functools import partial
 from datasets import load_dataset
 from pathlib import Path
-from arena.model.model_adapter import get_conversation_template
 from bench_utils import (
     chat_completion_openai,
     chat_completion_gemini,
@@ -30,7 +29,6 @@ default_generation_config = {
     "temperature": 0.0,
     "top_p": 1.0,
     "max_new_tokens": 4096,
-    'stop': None, 'stop_token_ids': None, 'echo': False
 }
 
 def call_api_worker_gpt(text, image, model_name, **generate_kwargs) -> str:
@@ -111,14 +109,9 @@ def call_api_worker_gpt(text, image, model_name, **generate_kwargs) -> str:
 def call_local_worker(text, image, worker_addr, model_name, **generate_kwargs) -> str:
     global worker_initiated
     encoded_image = encode_image(image)
-    conv_template = get_conversation_template(model_name)
-    conv_template.messages = []
-    conv_template.append_message(conv_template.roles[0], text)
-    conv_template.append_message(conv_template.roles[1], "")
-    prompt = conv_template.get_prompt()
     params = {
         "prompt": {
-            "text": prompt,
+            "text": text,
             "image": encoded_image,
         },
         **generate_kwargs
@@ -162,6 +155,7 @@ def call_local_worker(text, image, worker_addr, model_name, **generate_kwargs) -
     
 def launch_lcoal_worker(
     model_name: str,
+    num_gpus: int=1,
 ) -> str:
     """
     Launch a model worker and return the address
@@ -170,16 +164,19 @@ def launch_lcoal_worker(
     Returns:
         the address of the launched model
     """
+    import torch
     # python3 -m arena.serve.model_worker --model-path liuhaotian/llava-v1.6-vicuna-7b --port 31011 --worker http://127.0.0.1:31011 --host=127.0.0.1 --no-register
+    # num_gpus = torch.cuda.device_count()
     port = random.randint(30000, 40000)
     worker_addr = f"http://127.0.0.1:{port}"
     proc = subprocess.Popen([
-        "python3", "-m", "arena.serve.model_worker",
+        "python3", "-m", "lmm_engines.huggingface.model_worker",
         "--model-path", model_name,
         "--port", str(port),
         "--worker", worker_addr,
         "--host", "127.0.0.1",
         "--no-register",
+        "--num-gpus", str(num_gpus),
     ])
     workers.append(proc)
     print(f"Launched model {model_name} at address {worker_addr}")
@@ -202,7 +199,9 @@ def main(
     model_name: str=None,
     results_dir: str=None,
     LOG_DIR="./logs",
-    bench_name="vision_bench_0617"
+    bench_name="vision_bench_0617",
+    num_gpu: int=1,
+    num_proc: int=8,
 ):
     """
     Args:
@@ -248,7 +247,7 @@ def main(
     else:
         # local model
         if worker_addr is None:
-            worker_addr = launch_lcoal_worker(model_name)
+            worker_addr = launch_lcoal_worker(model_name, num_gpus=num_gpu)
         call_model_worker = partial(call_local_worker, worker_addr=worker_addr, model_name=model_name, **config)
     # Load the dataset
     encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
@@ -304,7 +303,7 @@ def main(
         return item
     
     print("Generating...")
-    generated_dataset = dataset.map(map_generate, with_indices=True)
+    generated_dataset = dataset.map(map_generate, with_indices=True, num_proc=num_proc)
     print("Finished generating for all items")
     
     results_file = results_dir + model_name_to_id(model_name) + ".jsonl"
