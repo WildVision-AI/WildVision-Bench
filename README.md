@@ -90,7 +90,7 @@ python show_results.py
 ```
 
 
-## Leaderboard
+## Leaderboard (`vision_bench_0617`)
 |              Model               | Score |    95% CI   | Win Rate | Reward | Much Better | Better |  Tie  | Worse | Much Worse | Avg Tokens |
 | :------------------------------: | :---: | :---------: | :------: | :----: | :---------: | :----: | :---: | :---: | :--------: | :--------: |
 |              gpt-4o              | 89.15 | (-1.9, 1.5) |  80.6%   |  56.4  |    255.0    | 148.0  |  14.0 |  72.0 |    11.0    |    142     |
