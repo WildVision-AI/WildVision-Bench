@@ -17,8 +17,8 @@ wildbench_data = load_dataset('WildVision/wildvision-bench', config_name='vision
 ```
 We have two versions of Wildvision-Bench data
 
-- vision_bench_0617: the selected 500 examples that best simulates the vision-arena elo ranking, same data in the paper.
-- vision_bench_0701: the further filter and selected 500 examples by NSFW and manual selection. Leaderboard are still preparing.
+- `vision_bench_0617`: the selected 500 examples that best simulates the vision-arena elo ranking, same data in the paper.
+- `vision_bench_0701`: the further filter and selected 500 examples by NSFW and manual selection. Leaderboard are still preparing.
 
 **Note: For now, if you want to evaluate your model, please use the `vision_bench_0617` version to fairly compare the performance with other models in the following leaderboard.
 We are preparing the leaderboard for `vision_bench_0701` and will update it soon.**
