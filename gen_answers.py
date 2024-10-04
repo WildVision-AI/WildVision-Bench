@@ -196,7 +196,7 @@ def cleanup_process(proc):
 
 def main(
     dataset_path: str="WildVision/wildvision-bench",
-    dataset_name: str="default",
+    dataset_name: str="vision_bench_0617",
     dataset_split: str="test",
     worker_addr: str=None,
     model_name: str=None,
