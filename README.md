@@ -39,7 +39,10 @@ Example model answers files is shown in [`data/vision_bench_0617/example_model_a
 - `token_len`: the token length of the output (using tiktoken's gpt-3.5-turbo tokenizer)
 Then put the file in `data/vision_bench_0617/model_answers/{model_name}.jsonl`.
 
-We provide example inference scripts in [`gen_answers.py`](gen_answers.py). 
+We provide example inference scripts in [`gen_answers.py`](gen_answers.py) and [`run_vllm.py`](run_vllm.py) to generate model answers. You can use the following command to generate model answers:
+```bash
+python run_vllm.py --tokenizer_mode "auto" --max_model_len 65536 --num_gpu 1 --model_name "meta-llama/Llama-3.2-11B-Vision-Instruct"
+```
 ### 2. Get judgements
 First, go to [`config/judge_config.yaml`](config/judge_config.yaml) and add the models you want to evaluate in the `model_list` field. For example:
 

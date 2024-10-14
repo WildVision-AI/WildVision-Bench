@@ -38,7 +38,7 @@ def image_to_url(image:Image.Image, image_format="PNG") -> str:
 
 def main(
     dataset_path: str="WildVision/wildvision-bench",
-    dataset_name: str="default",
+    dataset_name: str="vision_bench_0617",
     dataset_split: str="test",
     worker_addr: str=None,
     model_name: str="mistralai/Pixtral-12B-2409",
@@ -48,7 +48,6 @@ def main(
     bench_name="vision_bench_0617",
     num_gpu: int=1,
     max_model_len: int=None,
-    batch_size=16,
 ):
     """
     Args:
@@ -107,9 +106,12 @@ def main(
             return item
         dataset = dataset.map(map_fill_existing, writer_batch_size=200) # pretty weird bug, need to set writer_batch_size to avoid the mapping error
         print("Filled existing answers")
+        to_generate_indices = [i for i, item in enumerate(dataset) if item['output'] is None]
+    else:
+        to_generate_indices = list(range(len(dataset)))
     
-    
-    llm = LLM(model=model_name, tokenizer_mode=tokenizer_mode, tensor_parallel_size=num_gpu, max_model_len=max_model_len)
+    print(f"Generating {len(to_generate_indices)} items for {model_name}")
+    llm = LLM(model=model_name, tokenizer_mode=tokenizer_mode, tensor_parallel_size=num_gpu, max_model_len=max_model_len, trust_remote_code=True)
     
     sampling_params = SamplingParams(
         max_tokens=config.get("max_new_tokens", 4096),
@@ -117,44 +119,48 @@ def main(
         temperature=config.get("temperature", 0.0),
     )
     
-    all_instructions = dataset['instruction']
-    new_dataset = datasets.Dataset.from_dict({
-        "instruction": all_instructions,
-    })
-    def process_messages(item, index):
-        item['messages'] = [
-            {
-                "role": "user",
-                "content": [{"type": "text", "text": item['instruction']}, {"type": "image_url", "image_url": {"url": image_to_url(dataset[index]['image'])}}]
-            },
-        ]
-        item['messages'] = json.dumps(item['messages'])
-        return item
-    new_dataset = new_dataset.map(process_messages, num_proc=8, with_indices=True)
-    all_messages = new_dataset['messages']
-    all_messages = [json.loads(x) for x in tqdm(all_messages, desc="Loading messages")]
-    assert not any([x is None for x in all_messages]), "Some messages are None"
-    # all_messages = new_dataset['messages']
-    
-    outputs = llm.chat(all_messages[198:230], sampling_params=sampling_params)
-    # 198, 199, 200, 201
-    # print(outputs[0])
-    # print(outputs[0].outputs[0].text)
-    # print(outputs[1])
-    # print(outputs[1].outputs[0].text)
-    all_outputs = [x.outputs[0].text for x in outputs]
-    print(all_outputs)
-    exit()
-    
-    token_lens = [len(encoding.encode(x, disallowed_special=())) for x in all_outputs]
-    dataset = dataset.add_column("output", all_outputs)
-    dataset = dataset.add_column("token_len", token_lens)
-    
-    
-    results_file = results_dir + model_name_to_id(model_name) + ".jsonl"
-    dataset.to_json(results_file, orient="records", lines=True)
-    # new_dataset.save_to_disk(os.path.join(results_dir, model_name))
-    print(f"Saved {model_name} answers to {results_file}")
+    if len(to_generate_indices) == 0:
+        print(f"No items to generate for {model_name}")
+    else:
+        # all_instructions = dataset['instruction']
+        all_instructions = [dataset[i]['instruction'] for i in to_generate_indices]
+        new_dataset = datasets.Dataset.from_dict({
+            "instruction": all_instructions,
+        })
+        def process_messages(item, index):
+            item['messages'] = [
+                {
+                    "role": "user",
+                    "content": [{"type": "text", "text": item['instruction']}, {"type": "image_url", "image_url": {"url": image_to_url(dataset[index]['image'])}}]
+                },
+            ]
+            item['messages'] = json.dumps(item['messages'])
+            return item
+        new_dataset = new_dataset.map(process_messages, num_proc=8, with_indices=True, desc="Processing messages")
+        all_messages = new_dataset['messages']
+        all_messages = [json.loads(x) for x in tqdm(all_messages, desc="Loading messages")]
+        assert not any([x is None for x in all_messages]), "Some messages are None"
+        # all_messages = new_dataset['messages']
+        
+        outputs = llm.chat(all_messages, sampling_params=sampling_params)
+        all_outputs = [x.outputs[0].text for x in outputs]
+        
+        def map_assign_output(item, index):
+            if index in to_generate_indices:
+                item['output'] = all_outputs[to_generate_indices.index(index)]
+                item['token_len'] = len(encoding.encode(item['output'], disallowed_special=()))
+            item['model'] = model_name
+            return item
+        dataset = dataset.map(map_assign_output, num_proc=2, with_indices=True, desc="Assigning outputs", remove_columns=["image"])
+        
+        results_file = results_dir + model_name_to_id(model_name) + ".jsonl"
+        
+        with open(results_file, "w") as f:
+            for i, item in enumerate(dataset):
+                f.write(json.dumps(item) + "\n")
+        # dataset.to_json(results_file, orient="records", lines=True)
+        # new_dataset.save_to_disk(os.path.join(results_dir, model_name))
+        print(f"Saved {model_name} answers to {results_file}")
     
     for worker in workers:
         worker.terminate()
