@@ -1,5 +1,12 @@
 # WildVision-Bench
 
+![WildVision-Bench](./assets/img/wildvision-bench.png)
+
+- Insipired by Alpaca-Eval, Arena-Hard, WildBench for the evaluation in the pure text setting, we propose WildVision-Bench to evaluate vision-language models in the wild with human preferences.
+- Specifically, we collect real-world QA pairs from the [🤗 WildVision-Arena](https://huggingface.co/spaces/WildVision/vision-arena) collections and curated **500** high quality examples for the evaluation. 
+- We use **GPT-4o** as the judgement model and **Claude-3-Sonnet** as our baseline model. The judge model is used to compare the model's response with the baseline model's response and decide which one is better.
+- WildVision-Bench achives **0.94** correlation with the WildVision-Arena elo ranking, which is a good indicator for the model's performance in the wild.
+
 ## installation
 
 As part of the wildvision arena environment, please install the following dependencies:
