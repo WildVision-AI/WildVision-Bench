@@ -116,6 +116,14 @@ python show_results.py
 |     bczhou/tiny-llava-v1-hf      |  8.3  | (-1.6, 1.2) |  11.0%   | -66.2  |     16.0    |  39.0  |  15.0 | 127.0 |   303.0    |     72     |
 | unum-cloud/uform-gen2-qwen-500m  |  7.81 | (-1.3, 1.7) |  10.8%   | -68.5  |     16.0    |  38.0  |  11.0 | 115.0 |   320.0    |     92     |
 
+## Contributing to the leaderboard
+If you want to contribute to the leaderboard, please follow the steps below:
+1. Fork this repository.
+2. Add your model's answers to the `data/vision_bench_0617/model_answers/` directory.
+3. Add your model's judgements to the `data/release_bench_0617/model_judgements/` directory.
+4. Run `python show_results.py` to generate the leaderboard.
+5. Copy the [`elo_leaderboard.md`](elo_leaderboard.md) file and paste it into the above "Leaderboard" section.
+6. Create a pull request.
 
 ## Acknowledgment
 We thank LMSYS for their great work on https://chat.lmsys.org/. Our code base is adapted from https://github.com/lm-sys/arena-hard-auto.
