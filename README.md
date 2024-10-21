@@ -162,7 +162,7 @@ If you found this repository useful, please consider cite our paper and resource
 @misc{yujie2024wildvisionv2,
     title={WildVision Data and Model},
     url={https://huggingface.co/WildVision},
-    author={Lu, Yujie* and Jiang, Dongfu* and Chen, Hui and Fu, Xingyu and Ma, Yingzi and Gu, Jing and Saxon, Michael and Xiao, Chaowei and Chen, Wenhu and Choi, Yejin and Lin, Bill Yuchen and Eckstein, Miguel and Wang, William},
+    author={Lu, Yujie* and Jiang, Dongfu* and Chen, Hui* and Fu, Xingyu and Ma, Yingzi and Gu, Jing and Saxon, Michael and Xiao, Chaowei and Chen, Wenhu and Choi, Yejin and Lin, Bill Yuchen and Eckstein, Miguel and Wang, William},
     year={2024}
 }
 ```
