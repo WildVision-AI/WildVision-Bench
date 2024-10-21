@@ -140,12 +140,30 @@ We thank LMSYS for their great work on https://chat.lmsys.org/. Our code base is
 
 Thanks [lmmseval](https://github.com/EvolvingLMMs-Lab/lmms-eval) for integrating WildVision-Bench into their evaluation platform.
 
+
 ## Citation
-```
+
+If you found this repository useful, please consider cite our paper and resources:
+
+```bibtex
+
 @article{lu2024wildvision,
   title={WildVision: Evaluating Vision-Language Models in the Wild with Human Preferences},
   author={Lu, Yujie and Jiang, Dongfu and Chen, Wenhu and Wang, William Yang and Choi, Yejin and Lin, Bill Yuchen},
-  journal={arXiv preprint arXiv:2406.11069},
+  publisher={NeurIPS},
   year={2024}
 }
+@misc{yujie2024wildvisionarena,
+    title={WildVision Arena: Benchmarking Multimodal LLMs in the Wild},
+    url={https://huggingface.co/spaces/WildVision/vision-arena/},
+    author={Lu, Yujie and Jiang, Dongfu and Chen, Hui and Ma, Yingzi and Gu, Jing and Xiao, Chaowei and Chen, Wenhu and Wang, William and Choi, Yejin and Lin, Bill Yuchen},
+    year={2024}
+}
+@misc{yujie2024wildvisionv2,
+    title={WildVision Data and Model},
+    url={https://huggingface.co/WildVision},
+    author={Lu, Yujie* and Jiang, Dongfu* and Chen, Hui and Fu, Xingyu and Ma, Yingzi and Gu, Jing and Saxon, Michael and Xiao, Chaowei and Chen, Wenhu and Choi, Yejin and Lin, Bill Yuchen and Eckstein, Miguel and Wang, William},
+    year={2024}
+}
 ```
+
